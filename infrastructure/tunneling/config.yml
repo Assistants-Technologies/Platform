@@ -1,0 +1,14 @@
+tunnel: assts-site
+credentials-file: /etc/cloudflared/credentials.json
+
+ingress:
+  - hostname: id.assts.site
+    service: http://caddy:80
+  
+  - hostname: idp.assts.site
+    service: http://caddy:80
+
+  - hostname: oauth.assts.site
+    service: http://caddy:80
+
+  - service: http_status:404

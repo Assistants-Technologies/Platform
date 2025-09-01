@@ -1,0 +1,73 @@
+name: asststech-dev
+services:
+  # Database
+  postgres:
+    container_name: postgres
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: ory
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: ory
+    volumes:
+      - ../../databases/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres-data:/var/lib/postgresql/data
+
+  # Next.js Application
+  id-portal:
+    container_name: id-portal
+    volumes:
+      - ../../../apps/id-portal:/app
+      - /app/node_modules
+      - /app/.next
+    build:
+      context: ../../../apps/id-portal
+      dockerfile: Dockerfile
+      target: dev
+    depends_on:
+      - kratos
+      - hydra
+    environment:
+      NEXT_PUBLIC_KRATOS_URL: https://idp.assts.site
+      NEXT_PUBLIC_HYDRA_URL: https://oauth.assts.site
+      NEXT_PUBLIC_APP_URL: https://id.assts.site
+      KRATOS_ADMIN_URL: http://kratos:4434
+      HYDRA_ADMIN_URL: http://hydra:4445
+      NODE_ENV: development
+    restart: unless-stopped
+    expose:
+      - "3000"
+
+  # Caddy reverse proxy
+  caddy:
+    container_name: caddy
+    image: caddy:2.10.2-alpine
+    depends_on:
+      - kratos
+      - hydra
+      - id-portal
+    ports:
+      - "443:443"
+    environment:
+      - CADDY_DEBUG=1
+    volumes:
+      - ../../reverse-proxy/Caddyfile:/etc/caddy/Caddyfile
+      - caddy-data:/data
+      - caddy-config:/config
+    restart: unless-stopped
+
+  # Cloudflare Tunnel
+  cloudflared:
+    container_name: cloudflared
+    image: cloudflare/cloudflared:latest
+    depends_on:
+      - caddy
+    command: tunnel --config /etc/cloudflared/config.yml run
+    volumes:
+      - ../../tunneling:/etc/cloudflared:ro
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+  caddy-data:
+  caddy-config:

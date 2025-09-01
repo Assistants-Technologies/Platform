@@ -1,0 +1,52 @@
+{
+  "$id": "https://id.assts.site/schemas/identity.default.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Default Identity Schema",
+  "type": "object",
+  "properties": {
+    "traits": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email",
+          "title": "E-Mail",
+          "ory.sh/kratos": {
+            "credentials": {
+              "code": {
+                "identifier": true,
+                "via": "email"
+              },
+              "password": { "identifier": true },
+              "webauthn": { "identifier": true },
+              "passkey": {
+                "display_name": true
+              }
+            }
+          }
+        },
+        "name": {
+          "type": "object",
+          "title": "Full Name",
+          "properties": {
+            "first": {
+              "type": "string",
+              "title": "First Name"
+            },
+            "last": {
+              "type": "string",
+              "title": "Last Name"
+            }
+          },
+          "required": ["first", "last"]
+        },
+        "tos_accepted": {
+          "type": "boolean",
+          "title": "I accept the Terms of Service",
+          "description": "You must accept the terms of service to register"
+        }
+      },
+      "required": ["email", "name", "tos_accepted"]
+    }
+  }
+}

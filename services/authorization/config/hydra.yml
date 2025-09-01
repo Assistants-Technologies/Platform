@@ -1,0 +1,22 @@
+dsn: postgres://ory:secret@postgres:5432/hydra?sslmode=disable
+
+serve:
+  public:
+    host: 0.0.0.0
+    port: 4444
+  admin:
+    host: 0.0.0.0
+    port: 4445
+
+log:
+  level: debug
+
+secrets:
+  system:
+    - youreallyneedtoreplacethis
+
+urls:
+  self:
+    issuer: https://oauth.assts.site
+  login: https://id.assts.site/auth/login
+  consent: https://id.assts.site/auth/consent

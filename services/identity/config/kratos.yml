@@ -1,0 +1,120 @@
+version: v1.0.0
+
+dsn: postgres://kratos:kratossecret@postgres:5432/kratos?sslmode=disable
+
+session:
+  cookie:
+    domain: .assts.site
+
+cookies:
+  domain: .assts.site
+
+serve:
+  public:
+    base_url: https://idp.assts.site
+    cors:
+      enabled: true
+      allowed_origins:
+        - https://id.assts.site
+        - https://idp.assts.site
+        - https://oauth.assts.site
+  admin:
+    base_url: http://kratos:4434/
+
+selfservice:
+  default_browser_return_url: https://id.assts.site/
+  allowed_return_urls:
+    - https://id.assts.site
+
+  methods:
+    password:
+      enabled: true
+    totp:
+      config:
+        issuer: Kratos
+      enabled: true
+    lookup_secret:
+      enabled: true
+    link:
+      enabled: true
+    code:
+      passwordless_enabled: true
+    
+    passkey:
+      enabled: true
+      config:
+        rp:
+          display_name: Assistants Identity
+          id: assts.site
+          origins:
+            - https://id.assts.site
+
+  flows:
+    error:
+      ui_url: https://id.assts.site/error
+
+    settings:
+      ui_url: https://id.assts.site/settings
+      privileged_session_max_age: 15m
+      required_aal: highest_available
+
+    recovery:
+      enabled: true
+      ui_url: https://id.assts.site/recovery
+      use: code
+
+    verification:
+      enabled: true
+      ui_url: https://id.assts.site/verification
+      use: code
+      after:
+        default_browser_return_url: https://id.assts.site/
+
+    logout:
+      after:
+        default_browser_return_url: https://id.assts.site/login
+
+    login:
+      ui_url: https://id.assts.site/login
+      lifespan: 10m
+
+    registration:
+      lifespan: 10m
+      ui_url: https://id.assts.site/registration
+      after:
+        password:
+          hooks:
+            - hook: session
+            - hook: show_verification_ui
+
+log:
+  level: debug
+  format: text
+  leak_sensitive_values: true
+
+secrets:
+  cookie:
+    - PLEASE-CHANGE-ME-I-AM-VERY-INSECURE
+  cipher:
+    - 32-LONG-SECRET-NOT-SECURE-AT-ALL
+
+ciphers:
+  algorithm: xchacha20-poly1305
+
+hashers:
+  algorithm: bcrypt
+  bcrypt:
+    cost: 10
+
+identity:
+  default_schema_id: default
+  schemas:
+    - id: default
+      url: file:///etc/config/kratos/identity.schema.json
+
+courier:
+  smtp:
+    connection_uri: smtps://mailslurper:1025/?skip_ssl_verify=true
+
+feature_flags:
+  use_continue_with_transitions: true

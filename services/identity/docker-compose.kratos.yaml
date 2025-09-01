@@ -1,0 +1,32 @@
+
+services:
+  kratos-migrate:
+    container_name: kratos-migrate
+    image: oryd/kratos:latest
+    depends_on:
+      - postgres
+    command: migrate sql -e --yes
+    environment:
+      - DSN=postgres://ory:secret@postgres:5432/kratos?sslmode=disable
+
+  kratos:
+    container_name: kratos
+    image: oryd/kratos:latest
+    depends_on:
+      - jaeger
+      - kratos-migrate
+      - postgres
+    command: serve --dev --config /etc/config/kratos/kratos.yml
+    environment:
+      - DSN=postgres://ory:secret@postgres:5432/kratos?sslmode=disable
+      - LOG_LEVEL=debug
+      - TRACING_PROVIDER=jaeger
+      - TRACING_PROVIDERS_JAEGER_SAMPLING_SERVER_URL=http://jaeger:5778/sampling
+      - TRACING_PROVIDERS_JAEGER_LOCAL_AGENT_ADDRESS=jaeger:6831
+    volumes:
+      - ../../../services/identity/config:/etc/config/kratos
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "16686:16686"

@@ -10,6 +10,9 @@ services:
       - DSN=postgres://ory:secret@postgres:5432/hydra?sslmode=disable
 
   hydra:
+    ports:
+      - "4444:4444" # Public API
+      - "4445:4445" # Admin API
     container_name: hydra
     image: oryd/hydra:latest
     depends_on:

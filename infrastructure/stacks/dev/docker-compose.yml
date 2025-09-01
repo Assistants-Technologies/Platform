@@ -13,30 +13,31 @@ services:
       - ../../databases/init.sql:/docker-entrypoint-initdb.d/init.sql
       - postgres-data:/var/lib/postgresql/data
 
+
   # Next.js Application
-  id-portal:
-    container_name: id-portal
-    volumes:
-      - ../../../apps/id-portal:/app
-      - /app/node_modules
-      - /app/.next
-    build:
-      context: ../../../apps/id-portal
-      dockerfile: Dockerfile
-      target: dev
-    depends_on:
-      - kratos
-      - hydra
-    environment:
-      NEXT_PUBLIC_KRATOS_URL: https://idp.assts.site
-      NEXT_PUBLIC_HYDRA_URL: https://oauth.assts.site
-      NEXT_PUBLIC_APP_URL: https://id.assts.site
-      KRATOS_ADMIN_URL: http://kratos:4434
-      HYDRA_ADMIN_URL: http://hydra:4445
-      NODE_ENV: development
-    restart: unless-stopped
-    expose:
-      - "3000"
+  # id-portal:
+  #   container_name: id-portal
+  #   volumes:
+  #     - ../../../apps/id-portal:/app
+  #     - /app/node_modules
+  #     - /app/.next
+  #   build:
+  #     context: ../../../apps/id-portal
+  #     dockerfile: Dockerfile
+  #     target: dev
+  #   depends_on:
+  #     - kratos
+  #     - hydra
+  #   environment:
+  #     NEXT_PUBLIC_KRATOS_URL: http://localhost:4433 #https://idp.assts.site
+  #     NEXT_PUBLIC_HYDRA_URL: http://localhost:4444 #https://oauth.assts.site
+  #     NEXT_PUBLIC_APP_URL: http://localhost:3000 #https://id.assts.site
+  #     KRATOS_ADMIN_URL: http://localhost:4434 #http://kratos:4434
+  #     HYDRA_ADMIN_URL: http://localhost:4445 #http://hydra:4445
+  #     NODE_ENV: development
+  #   restart: unless-stopped
+  #   expose:
+  #     - "3000"
 
   # Caddy reverse proxy
   caddy:
@@ -45,7 +46,7 @@ services:
     depends_on:
       - kratos
       - hydra
-      - id-portal
+      #- id-portal
     ports:
       - "443:443"
     environment:

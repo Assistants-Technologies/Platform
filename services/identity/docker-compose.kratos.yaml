@@ -10,6 +10,9 @@ services:
       - DSN=postgres://ory:secret@postgres:5432/kratos?sslmode=disable
 
   kratos:
+    ports:
+      - "4433:4433" # Public API
+      - "4434:4434" # Admin API
     container_name: kratos
     image: oryd/kratos:latest
     depends_on:

@@ -1,4 +1,4 @@
-import { getSession } from "@/lib/ory/kratos.session"
+import { getSession } from "@/lib/ory/session/getSession"
 
 export default async function HomePage() {
  const res = await getSession()

@@ -1,27 +1,18 @@
-import type {
-  SuccessfulNativeLogin,
-  LoginFlow,
-  GenericError,
-  ErrorBrowserLocationChangeRequired,
-  UpdateLoginFlowBody,
-} from "@ory/client"
-import { ory, extractError } from "./sdk"
+import type { GenericError, SuccessfulNativeLogin, LoginFlow, ErrorBrowserLocationChangeRequired, UpdateLoginFlowBody } from "@ory/client";
+import { ory, extractError } from "../sdk"
 
-export type SubmitLoginFlowResult =
+export type SubmitBrowserLoginFlowResult =
   | { ok: true; status: 200; data: SuccessfulNativeLogin }
   | { ok: false; status: 400; error: LoginFlow }
   | { ok: false; status: 410; error: GenericError }
   | { ok: false; status: 422; error: ErrorBrowserLocationChangeRequired }
   | { ok: false; status: 303; error: GenericError }
-  | { ok: false; status: number; error: GenericError }
+  | { ok: false; status: Exclude<number, 200 | 400 | 410 | 422 | 303>; error: GenericError }
 
-/**
- * Submits login credentials to Ory Kratos and handles the response
- */
-export async function submitLoginFlow(
+export async function submitBrowserLoginFlow(
   flowId: string,
   body: UpdateLoginFlowBody
-): Promise<SubmitLoginFlowResult> {
+): Promise<SubmitBrowserLoginFlowResult> {
   try {
     const { data } = await ory.updateLoginFlow({
       flow: flowId,
@@ -29,7 +20,6 @@ export async function submitLoginFlow(
     })
     return { ok: true, status: 200, data: data as SuccessfulNativeLogin }
   } catch (err) {
-    // Extract status and data from error response
     const { status, data } = extractError(err)
     switch (status) {
       case 400:
@@ -41,7 +31,7 @@ export async function submitLoginFlow(
       case 303:
         return { ok: false, status, error: data as GenericError }
       default:
-        return { ok: false, status, error: data as GenericError }
+        return { ok: false, status: status as Exclude<number, 200 | 400 | 410 | 422 | 303>, error: data as GenericError }
     }
   }
 }

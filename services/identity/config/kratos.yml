@@ -4,17 +4,18 @@ dsn: postgres://kratos:kratossecret@postgres:5432/kratos?sslmode=disable
 
 session:
   cookie:
-    domain: .assts.site
+    domain: localhost
 
 cookies:
-  domain: .assts.site
+  domain: localhost
 
 serve:
   public:
-    base_url: https://idp.assts.site
+    base_url: http://localhost:3000 #https://idp.assts.site
     cors:
       enabled: true
       allowed_origins:
+        - http://localhost:3000
         - https://id.assts.site
         - https://idp.assts.site
         - https://oauth.assts.site
@@ -22,8 +23,9 @@ serve:
     base_url: http://kratos:4434/
 
 selfservice:
-  default_browser_return_url: https://id.assts.site/
+  default_browser_return_url: http://localhost:3000 #https://id.assts.site/
   allowed_return_urls:
+    - http://localhost:3000
     - https://id.assts.site
 
   methods:
@@ -45,42 +47,43 @@ selfservice:
       config:
         rp:
           display_name: Assistants Identity
-          id: assts.site
+          id: localhost #assts.site
           origins:
+            - http://localhost:3000
             - https://id.assts.site
 
   flows:
     error:
-      ui_url: https://id.assts.site/error
+      ui_url: http://localhost:3000/error
 
     settings:
-      ui_url: https://id.assts.site/settings
+      ui_url: http://localhost:3000/settings
       privileged_session_max_age: 15m
       required_aal: highest_available
 
     recovery:
       enabled: true
-      ui_url: https://id.assts.site/recovery
+      ui_url: http://localhost:3000/recovery
       use: code
 
     verification:
       enabled: true
-      ui_url: https://id.assts.site/verification
+      ui_url: http://localhost:3000/verification
       use: code
       after:
-        default_browser_return_url: https://id.assts.site/
+        default_browser_return_url: http://localhost:3000/
 
     logout:
       after:
-        default_browser_return_url: https://id.assts.site/login
+        default_browser_return_url: http://localhost:3000/login
 
     login:
-      ui_url: https://id.assts.site/login
+      ui_url: http://localhost:3000/login
       lifespan: 10m
 
     registration:
       lifespan: 10m
-      ui_url: https://id.assts.site/registration
+      ui_url: http://localhost:3000/registration
       after:
         password:
           hooks:

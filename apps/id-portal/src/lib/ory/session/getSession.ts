@@ -1,13 +1,10 @@
 import type { Session, GenericError } from "@ory/client"
-import { ory, extractError } from "./sdk"
+import { ory, extractError } from "../sdk"
 
 export type GetSessionResult =
   | { ok: true; status: 200; data: Session }
   | { ok: false; status: number; error: GenericError }
 
-/**
- * Gets the current user session from Ory Kratos
- */
 export async function getSession(): Promise<GetSessionResult> {
   try {
     const { data } = await ory.toSession()

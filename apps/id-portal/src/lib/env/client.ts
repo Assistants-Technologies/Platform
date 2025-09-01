@@ -1,4 +1,3 @@
-"use client"
 import { z } from "zod"
 
 const schema = z.object({
@@ -12,3 +11,4 @@ export const clientEnv = schema.parse({
   NEXT_PUBLIC_HYDRA_URL: process.env.NEXT_PUBLIC_HYDRA_URL ?? "",
   NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL ?? "",
 })
+

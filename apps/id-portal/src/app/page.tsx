@@ -1,39 +1,36 @@
+"use client"
+import { useEffect, useState } from "react"
 import { getSession } from "@/lib/ory/session/getSession"
 
-export default async function HomePage() {
- const res = await getSession()
+export default function HomePage() {
+  const [session, setSession] = useState<any>(null)
+  const [error, setError] = useState<any>(null)
 
-  if (!res.ok) {
-    switch (res.status) {
-      case 401:
-      case 403:
-        return <p>❌ No session</p>
-      case 404:
-        return <p>❌ Not found</p>
-      case 500:
-        return <p>❌ Server error</p>
-      default:
-        return (
-          <div>
-            <p>❌ Other error: {res.status}</p>
-            <pre className="text-xs bg-gray-100 p-2 rounded">
-              {JSON.stringify(res.error, null, 2)}
-            </pre>
-          </div>
-        )
+  useEffect(() => {
+    async function load() {
+      const res = await getSession()
+      if (res.ok) setSession(res.data)
+      else setError(res.error)
     }
+    load()
+  }, [])
+
+  if (error) {
+    return <p>❌ No session: {JSON.stringify(error, null, 2)}</p>
   }
 
-  const session = res.data
-  const email = session.identity?.traits?.email ?? "unknown"
+  if (!session) {
+    return <p>Loading session...</p>
+  }
 
   return (
     <div className="p-6 space-y-2">
-      <p className="font-bold">✅ Session active</p>
-      <p>Logged in user: {email}</p>
-      <pre className="text-xs bg-gray-100 p-2 rounded">
-        {JSON.stringify(session, null, 2)}
-      </pre>
+        <p className="font-bold">✅ Session active</p>
+        <p>Logged in user: {session.identity?.traits?.email ?? "unknown"}</p>
+
+        <pre className="bg-gray-100 p-4 rounded">
+            {JSON.stringify(session, null, 2)}
+        </pre>
     </div>
   )
 }

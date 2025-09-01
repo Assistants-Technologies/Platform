@@ -1,4 +1,4 @@
-import messageClass from "@/lib/ui/getUiNodeTextClasses"
+import getUiNodeTextClasses from "@/lib/ui/getUiNodeTextClasses"
 import { UiNode, UiNodeTypeEnum, UiNodeInputAttributes, UiContainer } from "@ory/client"
 
 export function isUiNodeInput(node: UiNode): node is UiNode & { attributes: UiNodeInputAttributes } {
@@ -14,13 +14,14 @@ export default function Input({ node }: InputProps) {
         return null
     }
 
+
     return (
         <>
             {
                 node.meta.label?.text && (
                     <span 
-                        className="text-sm text-gray-500"
                         id={`${node.meta.label.id}`}
+                        className={getUiNodeTextClasses(node.meta?.label?.type ?? "info") + " w-full"}
                     >
                         {node.meta.label.text}
                     </span>
@@ -31,7 +32,7 @@ export default function Input({ node }: InputProps) {
                 name={node.attributes.name}
                 defaultValue={node.attributes.value ?? undefined}
                 placeholder={node.meta?.label?.text ?? undefined}
-                className={messageClass(node.messages?.[0]?.type ?? "info") + " w-full"}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 autoComplete={node.attributes.autocomplete ?? undefined}
                 disabled={node.attributes.disabled ?? undefined}
                 required={node.attributes.required ?? undefined}

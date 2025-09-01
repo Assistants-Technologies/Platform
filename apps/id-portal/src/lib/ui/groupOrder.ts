@@ -1,4 +1,4 @@
-import { UiNodeGroupEnum } from "@ory/client"
+import { UiNodeGroupEnum } from "@ory/client";
 
 export const groupOrder: UiNodeGroupEnum[] = [
   UiNodeGroupEnum.Default,
@@ -15,4 +15,4 @@ export const groupOrder: UiNodeGroupEnum[] = [
   UiNodeGroupEnum.Oauth2Consent,
   UiNodeGroupEnum.Profile,
   UiNodeGroupEnum.UnknownDefaultOpenApi,
-]
+];

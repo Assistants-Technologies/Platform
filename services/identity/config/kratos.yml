@@ -11,7 +11,7 @@ cookies:
 
 serve:
   public:
-    base_url: http://localhost:3000 #https://idp.assts.site
+    base_url: http://localhost:4433 #https://idp.assts.site
     cors:
       enabled: true
       allowed_origins:

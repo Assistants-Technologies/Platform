@@ -9,11 +9,10 @@ interface InputProps {
     node: UiNode & { attributes: UiNodeInputAttributes }
 }
 
-export default function Input({ node }: InputProps) {
+export default function UiNodeInput({ node }: InputProps) {
     if(!isUiNodeInput(node)) {
         return null
     }
-
 
     return (
         <>

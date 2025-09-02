@@ -12,7 +12,6 @@ export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [flowId, setFlowId] = useState("");
   const [flow, setFlow] = useState<LoginFlow | null>(null);
 
   useEffect(() => {
@@ -20,7 +19,6 @@ export default function LoginPage() {
       const query = searchParams.get("flow");
       if (query) {
         console.log("Using existing flow from query:", query);
-        setFlowId(query);
         const flowData = await getLoginFlow(query);
         if (isSuccess(flowData)) {
           setFlow(flowData.data);
@@ -35,7 +33,6 @@ export default function LoginPage() {
       if (isSuccess(result)) {
         console.log("Login flow created:", result.data);
         setFlow(result.data);
-        setFlowId(result.data.id);
         router.replace(`/login?flow=${result.data.id}`);
       } else if (isRedirect(result)) {
         console.log("Redirecting to:", result.redirectTo);
@@ -50,8 +47,12 @@ export default function LoginPage() {
   }, [router, searchParams]);
 
   if (!flow) {
-    return <div>Loading login flow...</div>;
+    return <>Loading login flow...</>;
   }
 
-  return <UiFormRenderer flow={flow} />;
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+      <UiFormRenderer flow={flow} />
+    </div>
+  );
 }

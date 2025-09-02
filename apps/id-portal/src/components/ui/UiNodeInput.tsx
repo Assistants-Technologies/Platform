@@ -1,99 +1,141 @@
-import getUiNodeTextClasses from "@/lib/ui/getUiNodeTextClasses";
 import {
   UiNode,
-  UiNodeTypeEnum,
   UiNodeInputAttributes,
-  UiContainer,
   UiNodeInputAttributesTypeEnum,
 } from "@ory/client";
-
-export function isUiNodeInput(
-  node: UiNode,
-): node is UiNode & { attributes: UiNodeInputAttributes } {
-  return node.type === UiNodeTypeEnum.Input;
-}
+import { useCallback } from "react";
 
 interface InputProps {
   node: UiNode & { attributes: UiNodeInputAttributes };
 }
 
 export default function UiNodeInput({ node }: InputProps) {
-  if (!isUiNodeInput(node)) {
-    return null;
+  const { attributes, meta } = node;
+  const isButton =
+    attributes.type === UiNodeInputAttributesTypeEnum.Button ||
+    attributes.type === UiNodeInputAttributesTypeEnum.Submit;
+  const isCheckbox = attributes.type === UiNodeInputAttributesTypeEnum.Checkbox;
+
+    const formatAttributeName = useCallback(() => {
+    if (!attributes.name) return ""
+      return attributes.name
+            .replace("traits.", "")
+            .split(".")
+            .reverse()
+            .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+            .join(" ")
+  }, [attributes.name])
+
+  const getPlaceholderText = useCallback(() => {
+    if (attributes.type === UiNodeInputAttributesTypeEnum.Email) {
+      return "hi@assts.tech";
+    }
+    if (attributes.name === "traits.name.first") {
+      return "Assistants";
+    }
+    if (attributes.name === "traits.name.last") {
+      return "Technologies";
+    }
+    if (attributes.type === UiNodeInputAttributesTypeEnum.Password) {
+      return "••••••••";
+    }
+    if (attributes.type === UiNodeInputAttributesTypeEnum.Checkbox) {
+      return "";
+    }
+    if (attributes.name?.includes("phone")) {
+      return "+48 123 456 789";
+    }
+    if (attributes.name?.includes("address")) {
+      return "123 Innovation Street";
+    }
+    if (attributes.name?.includes("company")) {
+      return "Assistants Technologies";
+    }
+    if (attributes.name) {
+      return `Enter ${meta.label?.text ?? formatAttributeName()}`;
+    }
+    return "";
+  }, [attributes]);
+
+  if (isButton) {
+    return (
+      <button
+        name={attributes.name}
+        value={attributes.value ?? undefined}
+        type={attributes.type as "button" | "submit"}
+        disabled={attributes.disabled ?? false}
+        className="btn-primary"
+        onClick={
+          attributes.onclickTrigger
+            ? () => {
+                const fn = (window as any)[attributes.onclickTrigger!];
+                if (typeof fn === "function") fn();
+              }
+            : undefined
+        }
+      >
+        {meta?.label?.text ?? attributes.name}
+      </button>
+    );
   }
 
-  const isButton = (
-    [
-      UiNodeInputAttributesTypeEnum.Button,
-      UiNodeInputAttributesTypeEnum.Submit,
-    ] as UiNodeInputAttributesTypeEnum[]
-  ).includes(node.attributes.type);
+  if (isCheckbox) {
+    return (
+      <div className="flex items-center space-x-2">
+        <input
+          id={attributes.name}
+          type="checkbox"
+          name={attributes.name}
+          defaultChecked={attributes.value === "true"}
+          disabled={attributes.disabled ?? false}
+          required={attributes.required ?? false}
+          className="h-4 w-4 text-black border-gray-300 rounded focus:ring-black"
+          onChange={(e) => {
+            const target = e.currentTarget as HTMLInputElement;
+            target.value = target.checked ? "true" : "false";
+          }}
+        />
+        {meta?.label?.text && (
+          <label
+            htmlFor={attributes.name}
+            className="text-sm font-medium text-gray-700"
+          >
+            {meta.label.text}
+          </label>
+        )}
+      </div>
+    );
+  }
 
   return (
-    <>
-      {node.meta.label?.text && !isButton && (
-        <span
-          id={`${node.meta.label.id}`}
-          className={
-            getUiNodeTextClasses(node.meta?.label?.type ?? "info") + " w-full"
-          }
+    <div className="space-y-1">
+      {meta?.label?.text && (
+        <label
+          htmlFor={attributes.name}
+          className="block text-sm font-medium text-gray-700"
         >
-          {node.meta.label.text}
-        </span>
+          {meta.label.text}
+        </label>
       )}
-      {isButton ? (
-        <button
-          name={node.attributes.name}
-          value={node.attributes.value ?? undefined}
-          type={
-            node.attributes.type as "button" | "submit" | "reset" | undefined
-          }
-          disabled={node.attributes.disabled ?? undefined}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm 
-                                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          onClick={
-            node.attributes.onclickTrigger
-              ? () => {
-                  const fn = (window as any)[
-                    (node.attributes as any).onclickTrigger
-                  ];
-                  fn();
-                }
-              : undefined
-          }
-        >
-          {node.meta?.label?.text ?? node.attributes.name}
-        </button>
-      ) : (
-        <node.attributes.node_type
-          type={node.attributes.type}
-          name={node.attributes.name}
-          defaultValue={node.attributes.value ?? undefined}
-          placeholder={node.meta?.label?.text ?? undefined}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          autoComplete={node.attributes.autocomplete ?? undefined}
-          disabled={node.attributes.disabled ?? undefined}
-          required={node.attributes.required ?? undefined}
-          onClick={
-            node.attributes.onclickTrigger
-              ? () => {
-                  const fn = (window as any)[
-                    (node.attributes as any).onclickTrigger
-                  ];
-                  fn();
-                }
-              : undefined
-          }
-          onChange={
-            node.attributes.type === UiNodeInputAttributesTypeEnum.Checkbox
-              ? (e) => {
-                  const value = e.target.checked ? "true" : "false";
-                  e.currentTarget.value = value;
-                }
-              : undefined
-          }
-        />
-      )}
-    </>
+      <input
+        id={attributes.name}
+        type={attributes.type}
+        name={attributes.name}
+        defaultValue={attributes.value ?? ""}
+        placeholder={getPlaceholderText()}
+        autoComplete={attributes.autocomplete ?? undefined}
+        disabled={attributes.disabled ?? false}
+        required={attributes.required ?? false}
+        className="input-base"
+        onClick={
+          attributes.onclickTrigger
+            ? () => {
+                const fn = (window as any)[attributes.onclickTrigger!];
+                if (typeof fn === "function") fn();
+              }
+            : undefined
+        }
+      />
+    </div>
   );
 }

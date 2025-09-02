@@ -12,7 +12,6 @@ export default function RegistrationPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [flowId, setFlowId] = useState("");
   const [flow, setFlow] = useState<RegistrationFlow | null>(null);
 
   useEffect(() => {
@@ -20,7 +19,6 @@ export default function RegistrationPage() {
       const query = searchParams.get("flow");
       if (query) {
         console.log("Using existing flow from query:", query);
-        setFlowId(query);
         const flowData = await getRegistrationFlow(query);
         if (isSuccess(flowData)) {
           setFlow(flowData.data);
@@ -35,7 +33,6 @@ export default function RegistrationPage() {
       if (isSuccess(result)) {
         console.log("Registration flow created:", result.data);
         setFlow(result.data);
-        setFlowId(result.data.id);
         router.replace(`/registration?flow=${result.data.id}`);
       } else if (isRedirect(result)) {
         console.log("Redirecting to:", result.redirectTo);
@@ -53,5 +50,9 @@ export default function RegistrationPage() {
     return <div>Loading login flow...</div>;
   }
 
-  return <UiFormRenderer flow={flow} />;
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+      <UiFormRenderer flow={flow} />
+    </div>
+  );
 }

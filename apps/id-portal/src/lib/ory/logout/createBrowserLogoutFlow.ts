@@ -1,11 +1,11 @@
-import { GenericError, RegistrationFlow } from "@ory/client";
+import { GenericError, LogoutFlow } from "@ory/client";
 import { ory, extractError } from "../sdk";
 
-export type CreateBrowserLoginFlowResult =
+export type CreateBrowserLogoutFlowResult =
   | {
       ok: true;
       status: 200;
-      data: RegistrationFlow;
+      data: LogoutFlow;
       error?: never;
       redirectTo?: never;
     }
@@ -18,10 +18,12 @@ export type CreateBrowserLoginFlowResult =
       redirectTo?: never;
     };
 
-export async function createBrowserRegistrationFlow(): Promise<CreateBrowserLoginFlowResult> {
+export async function createBrowserLogoutFlow(
+  returnTo?: string,
+): Promise<CreateBrowserLogoutFlowResult> {
   try {
-    const { data } = await ory.createBrowserRegistrationFlow({
-      returnTo: `${process.env.NEXT_PUBLIC_APP_URL}/`,
+    const { data } = await ory.createBrowserLogoutFlow({
+      returnTo: returnTo ?? `${process.env.NEXT_PUBLIC_APP_URL}/`,
     });
 
     return { ok: true, status: 200, data };

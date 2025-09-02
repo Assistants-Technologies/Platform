@@ -1,9 +1,8 @@
 import { groupOrder } from "@/lib/ui/groupOrder";
 import { UiNodeRenderer } from "./UiNodeRenderer";
-import { useCallback } from "react";
-
-import { JSX } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { JSX, useCallback } from "react";
 
 interface UiFormRendererProps<T> {
   flow: T & {
@@ -70,23 +69,16 @@ export default function UiFormRenderer<T>({ flow }: UiFormRendererProps<T>) {
 
   return (
     <div className="form-container">
-      {/* Header */}
+      {/* Logo + heading */}
       <div className="text-center mb-8">
-        <div className="w-16 h-16 bg-black rounded-full mx-auto mb-4 flex items-center justify-center">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-8 w-8 text-white"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 11c0-1.105.895-2 2-2h2m-6 5h6m2 0a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
+        <div className="flex justify-center mb-4">
+          <Image
+            src="/logos/light_purple_violet_full_transparent.svg"
+            alt="Assistants Identity"
+            width={60}
+            height={60}
+            priority
+          />
         </div>
         <h1 className="text-2xl font-bold text-gray-900">
           {titles[flowType].heading}
@@ -120,13 +112,8 @@ export default function UiFormRenderer<T>({ flow }: UiFormRendererProps<T>) {
         ))}
       </form>
 
-      {/* Footer text */}
+      {/* Footer */}
       {titles[flowType].footer}
-
-      {/* JSON for debugging */}
-      {/* <pre className="mt-6 p-4 bg-gray-100 rounded-md">
-        {JSON.stringify(flow, null, 2)}
-      </pre> */}
     </div>
   );
 }

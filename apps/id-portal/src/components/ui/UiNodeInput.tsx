@@ -16,15 +16,15 @@ export default function UiNodeInput({ node }: InputProps) {
     attributes.type === UiNodeInputAttributesTypeEnum.Submit;
   const isCheckbox = attributes.type === UiNodeInputAttributesTypeEnum.Checkbox;
 
-    const formatAttributeName = useCallback(() => {
-    if (!attributes.name) return ""
-      return attributes.name
-            .replace("traits.", "")
-            .split(".")
-            .reverse()
-            .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-            .join(" ")
-  }, [attributes.name])
+  const formatAttributeName = useCallback(() => {
+    if (!attributes.name) return "";
+    return attributes.name
+      .replace("traits.", "")
+      .split(".")
+      .reverse()
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+      .join(" ");
+  }, [attributes.name]);
 
   const getPlaceholderText = useCallback(() => {
     if (attributes.type === UiNodeInputAttributesTypeEnum.Email) {

@@ -21,7 +21,7 @@ export type CreateBrowserLoginFlowResult =
 export async function createBrowserRegistrationFlow(): Promise<CreateBrowserLoginFlowResult> {
   try {
     const { data } = await ory.createBrowserRegistrationFlow({
-      returnTo: `${process.env.NEXT_PUBLIC_APP_URL}/`,
+      returnTo: `${process.env.NEXT_PUBLIC_APP_URL}/account`,
     });
 
     return { ok: true, status: 200, data };

@@ -48,9 +48,7 @@ export default function HomePage() {
           </Link>
           .
         </p>
-        <p className="mt-4 text-sm text-gray-500">
-            {error.message}
-        </p>
+        <p className="mt-4 text-sm text-gray-500">{error.message}</p>
       </div>
     );
   }

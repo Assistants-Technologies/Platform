@@ -16,3 +16,15 @@
   @apply w-full bg-black text-white py-3 rounded-lg font-medium 
          transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg;
 }
+
+/* select base */
+.select-base {
+  @apply w-full px-4 py-3 rounded-lg bg-white border border-gray-300 
+         focus:border-black focus:ring-2 focus:ring-black transition-colors duration-200
+         text-gray-800;
+  appearance: none; /* usuwa natywną strzałkę (Safari/Chrome) */
+  background-image: url("data:image/svg+xml;utf8,<svg fill='none' stroke='%23333' stroke-width='2' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'><path stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'></path></svg>");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1rem;
+}

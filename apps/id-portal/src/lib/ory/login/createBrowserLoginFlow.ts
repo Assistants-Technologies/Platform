@@ -23,7 +23,7 @@ export async function createBrowserLoginFlow(): Promise<CreateBrowserLoginFlowRe
     const { data } = await ory.createBrowserLoginFlow({
       refresh: false,
       aal: "aal1",
-      returnTo: `${process.env.NEXT_PUBLIC_APP_URL}/`,
+      returnTo: `${process.env.NEXT_PUBLIC_APP_URL}/account`,
     });
 
     return { ok: true, status: 200, data };

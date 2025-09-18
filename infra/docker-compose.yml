@@ -1,0 +1,59 @@
+services:
+  kratos:
+    image: oryd/kratos:v1.1.0
+    container_name: kratos
+    command: ["serve", "--config", "/etc/config/kratos.yml"]
+    volumes:
+      - ./kratos/kratos.yml:/etc/config/kratos.yml
+      - ./kratos/identity.schema.json:/etc/config/identity.schema.json
+    environment:
+      - DSN=postgres://kratos:kratos@db-kratos:5432/kratos?sslmode=disable
+    depends_on:
+      - db-kratos
+    networks:
+      - internal
+
+  hydra:
+    image: oryd/hydra:v2.2.0
+    container_name: hydra
+    command: ["serve", "all", "--config", "/etc/config/hydra.yml"]
+    volumes:
+      - ./hydra/hydra.yml:/etc/config/hydra.yml
+    environment:
+      - DSN=postgres://hydra:hydra@db-hydra:5432/hydra?sslmode=disable
+    depends_on:
+      - db-hydra
+    networks:
+      - internal
+
+  db-kratos:
+    image: postgres:15
+    container_name: db-kratos
+    environment:
+      - POSTGRES_USER=kratos
+      - POSTGRES_PASSWORD=kratos
+      - POSTGRES_DB=kratos
+    volumes:
+      - kratos-db-data:/var/lib/postgresql/data
+    networks:
+      - internal
+
+  db-hydra:
+    image: postgres:15
+    container_name: db-hydra
+    environment:
+      - POSTGRES_USER=hydra
+      - POSTGRES_PASSWORD=hydra
+      - POSTGRES_DB=hydra
+    volumes:
+      - hydra-db-data:/var/lib/postgresql/data
+    networks:
+      - internal
+
+volumes:
+  kratos-db-data:
+  hydra-db-data:
+
+networks:
+  internal:
+    driver: bridge

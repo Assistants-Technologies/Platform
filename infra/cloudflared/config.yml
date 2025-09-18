@@ -1,0 +1,9 @@
+tunnel: assts-tunnel
+credentials-file: /etc/cloudflared/0222430d-efa2-458f-a32a-c39f57873eec.json
+
+ingress:
+  - hostname: idp.assts.site
+    service: http://kratos:4433
+  - hostname: oidc.assts.site
+    service: http://hydra:4444
+  - service: http_status:404

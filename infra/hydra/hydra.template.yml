@@ -1,0 +1,16 @@
+dsn: ${DSN}
+
+serve:
+  public:
+    port: 4444
+  admin:
+    port: 4445
+
+log:
+  level: debug
+
+urls:
+  self:
+    issuer: https://${SUBDOMAIN_OIDC}.${DOMAIN}/
+  consent: https://${SUBDOMAIN_IDP}.${DOMAIN}/consent
+  login: https://${SUBDOMAIN_IDP}.${DOMAIN}/login

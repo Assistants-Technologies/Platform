@@ -1,0 +1,24 @@
+dsn: ${DSN}
+
+serve:
+  public:
+    base_url: https://${SUBDOMAIN_IDP}.${DOMAIN}/
+    port: 4433
+  admin:
+    base_url: http://kratos:4434/
+    port: 4434
+
+identity:
+  schemas:
+    - id: default
+      url: file:///etc/config/identity.schema.json
+
+selfservice:
+  default_browser_return_url: https://${SUBDOMAIN_IDP}.${DOMAIN}/
+
+courier:
+  smtp:
+    connection_uri: smtps://foo:bar@none
+
+log:
+  level: debug

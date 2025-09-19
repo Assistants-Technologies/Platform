@@ -4,7 +4,9 @@ generate-dev:
 	envsubst < infra/kratos/kratos.template.yml > infra/kratos/kratos.yml && \
 	DOMAIN=assts.site SUBDOMAIN_IDP=idp SUBDOMAIN_OIDC=oidc \
 	DSN=postgres://hydra:hydra@db-hydra:5432/hydra?sslmode=disable \
-	envsubst < infra/hydra/hydra.template.yml > infra/hydra/hydra.yml
+	envsubst < infra/hydra/hydra.template.yml > infra/hydra/hydra.yml && \
+	DOMAIN=assts.site SUBDOMAIN_IDP=idp SUBDOMAIN_OIDC=oidc \
+	envsubst < infra/cloudflared/config.template.yml > infra/cloudflared/config.yml
 
 generate-prod:
 	@DOMAIN=acstane.com SUBDOMAIN_IDP=idp SUBDOMAIN_OIDC=oidc \
@@ -12,7 +14,9 @@ generate-prod:
 	envsubst < infra/kratos/kratos.template.yml > infra/kratos/kratos.yml && \
 	DOMAIN=acstane.com SUBDOMAIN_IDP=idp SUBDOMAIN_OIDC=oidc \
 	DSN=postgres://hydra:hydra@db-hydra:5432/hydra?sslmode=disable \
-	envsubst < infra/hydra/hydra.template.yml > infra/hydra/hydra.yml
+	envsubst < infra/hydra/hydra.template.yml > infra/hydra/hydra.yml && \
+	DOMAIN=acstane.com SUBDOMAIN_IDP=idp SUBDOMAIN_OIDC=oidc \
+	envsubst < infra/cloudflared/config.template.yml > infra/cloudflared/config.yml
 
 dev: generate-dev
 	docker compose -f infra/docker-compose.yml -f infra/docker-compose.override.yml up -d

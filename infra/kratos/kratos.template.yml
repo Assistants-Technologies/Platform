@@ -2,7 +2,7 @@ dsn: ${DSN}
 
 serve:
   public:
-    base_url: https://${SUBDOMAIN_IDP}.${DOMAIN}/
+    base_url: https://idp.${DOMAIN}/
     port: 4433
   admin:
     base_url: http://kratos:4434/
@@ -14,7 +14,7 @@ identity:
       url: file:///etc/config/identity.schema.json
 
 selfservice:
-  default_browser_return_url: https://${SUBDOMAIN_IDP}.${DOMAIN}/
+  default_browser_return_url: https://idp.${DOMAIN}/
 
 courier:
   smtp:

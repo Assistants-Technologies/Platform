@@ -11,6 +11,6 @@ log:
 
 urls:
   self:
-    issuer: https://${SUBDOMAIN_OIDC}.${DOMAIN}/
-  consent: https://${SUBDOMAIN_IDP}.${DOMAIN}/consent
-  login: https://${SUBDOMAIN_IDP}.${DOMAIN}/login
+    issuer: https://oidc.${DOMAIN}/
+  consent: https://idp.${DOMAIN}/consent
+  login: https://idp.${DOMAIN}/login

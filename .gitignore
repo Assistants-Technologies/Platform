@@ -1,3 +1,4 @@
 infra/kratos/kratos.yml
 infra/hydra/hydra.yml
 infra/cloudflared/*.json
+infra/cloudflared/config.yml

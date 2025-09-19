@@ -1,21 +1,21 @@
 generate-dev:
-	@DOMAIN=assts.site SUBDOMAIN_IDP=idp SUBDOMAIN_OIDC=oidc \
+	@DOMAIN=assts.site \
 	DSN=postgres://kratos:kratos@db-kratos:5432/kratos?sslmode=disable \
 	envsubst < infra/kratos/kratos.template.yml > infra/kratos/kratos.yml && \
-	DOMAIN=assts.site SUBDOMAIN_IDP=idp SUBDOMAIN_OIDC=oidc \
+	DOMAIN=assts.site \
 	DSN=postgres://hydra:hydra@db-hydra:5432/hydra?sslmode=disable \
 	envsubst < infra/hydra/hydra.template.yml > infra/hydra/hydra.yml && \
-	DOMAIN=assts.site SUBDOMAIN_IDP=idp SUBDOMAIN_OIDC=oidc \
+	DOMAIN=assts.site \
 	envsubst < infra/cloudflared/config.template.yml > infra/cloudflared/config.yml
 
 generate-prod:
-	@DOMAIN=acstane.com SUBDOMAIN_IDP=idp SUBDOMAIN_OIDC=oidc \
+	@DOMAIN=acstane.com \
 	DSN=postgres://kratos:kratos@db-kratos:5432/kratos?sslmode=disable \
 	envsubst < infra/kratos/kratos.template.yml > infra/kratos/kratos.yml && \
-	DOMAIN=acstane.com SUBDOMAIN_IDP=idp SUBDOMAIN_OIDC=oidc \
+	DOMAIN=acstane.com \
 	DSN=postgres://hydra:hydra@db-hydra:5432/hydra?sslmode=disable \
 	envsubst < infra/hydra/hydra.template.yml > infra/hydra/hydra.yml && \
-	DOMAIN=acstane.com SUBDOMAIN_IDP=idp SUBDOMAIN_OIDC=oidc \
+	DOMAIN=acstane.com \
 	envsubst < infra/cloudflared/config.template.yml > infra/cloudflared/config.yml
 
 dev: generate-dev

@@ -18,3 +18,12 @@ services:
   hydra:
     ports:
       - "4444:4444"
+  
+  id-portal:
+    build:
+      target: development
+    volumes:
+      - ../../IdPortal:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development

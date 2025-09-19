@@ -2,8 +2,10 @@ tunnel: assts-tunnel
 credentials-file: /etc/cloudflared/0222430d-efa2-458f-a32a-c39f57873eec.json
 
 ingress:
-  - hostname: ${SUBDOMAIN_IDP}.${DOMAIN}
+  - hostname: idp.${DOMAIN}
     service: http://kratos:4433
-  - hostname: ${SUBDOMAIN_OIDC}.${DOMAIN}
+  - hostname: oidc.${DOMAIN}
     service: http://hydra:4444
+  - hostname: id.${DOMAIN}
+    service: http://id-portal:3000
   - service: http_status:404

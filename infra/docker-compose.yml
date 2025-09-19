@@ -1,6 +1,6 @@
 services:
   kratos:
-    image: oryd/kratos:v1.1.0
+    image: oryd/kratos:v1.3.1
     container_name: kratos
     command: ["serve", "--config", "/etc/config/kratos.yml"]
     volumes:
@@ -14,7 +14,7 @@ services:
       - internal
 
   hydra:
-    image: oryd/hydra:v2.2.0
+    image: oryd/hydra:v2.3.0
     container_name: hydra
     command: ["serve", "all", "--config", "/etc/config/hydra.yml"]
     volumes:
@@ -47,6 +47,15 @@ services:
       - POSTGRES_DB=hydra
     volumes:
       - hydra-db-data:/var/lib/postgresql/data
+    networks:
+      - internal
+
+  id-portal:
+    build:
+      context: ../../IdPortal
+      dockerfile: Dockerfile
+      target: production
+    container_name: id-portal
     networks:
       - internal
 

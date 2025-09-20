@@ -2,12 +2,19 @@ services:
   kratos:
     image: oryd/kratos:v1.3.1
     container_name: kratos
-    command: ["serve", "--config", "/etc/config/kratos.yml"]
+    environment:
+      - DSN=postgres://kratos:kratos@db-kratos:5432/kratos?sslmode=disable
+    entrypoint:
+      - sh
+      - -c
+      - |
+        echo "Running Kratos migrations..."
+        kratos migrate sql -e "postgres://kratos:kratos@db-kratos:5432/kratos?sslmode=disable" up --yes
+        echo "Starting Kratos server..."
+        kratos serve all --config /etc/config/kratos.yml
     volumes:
       - ./kratos/kratos.yml:/etc/config/kratos.yml
       - ./kratos/identity.schema.json:/etc/config/identity.schema.json
-    environment:
-      - DSN=postgres://kratos:kratos@db-kratos:5432/kratos?sslmode=disable
     depends_on:
       - db-kratos
     networks:
@@ -16,10 +23,18 @@ services:
   hydra:
     image: oryd/hydra:v2.3.0
     container_name: hydra
-    command: ["serve", "all", "--config", "/etc/config/hydra.yml"]
+    entrypoint:
+      - sh
+      - -c
+      - |
+        echo "Running Hydra migrations..."
+        hydra migrate sql -e "postgres://hydra:hydra@db-hydra:5432/hydra?sslmode=disable" up --yes
+        echo "Starting Hydra server..."
+        hydra serve all --config /etc/config/hydra.yml
     volumes:
       - ./hydra/hydra.yml:/etc/config/hydra.yml
     environment:
+      - ORY_SDK_URL=http://hydra:4445
       - DSN=postgres://hydra:hydra@db-hydra:5432/hydra?sslmode=disable
     depends_on:
       - db-hydra

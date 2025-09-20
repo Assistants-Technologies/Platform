@@ -4,9 +4,31 @@ serve:
   public:
     base_url: https://idp.${DOMAIN}/
     port: 4433
+    cors:
+      enabled: true
+      allowed_origins:
+        - http://localhost:3000
+        - https://id.${DOMAIN}
+        - https://oidc.${DOMAIN}
+      allowed_methods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+      allowed_headers:
+        - Cookie
+        - Authorization
+        - Content-Type
+        - X-Requested-With
+      allow_credentials: true
   admin:
     base_url: http://kratos:4434/
     port: 4434
+
+session:
+  cookie:
+    domain: ${DOMAIN}
+    same_site: Lax
 
 identity:
   schemas:
@@ -14,11 +36,35 @@ identity:
       url: file:///etc/config/identity.schema.json
 
 selfservice:
-  default_browser_return_url: https://idp.${DOMAIN}/
+  allowed_return_urls:
+    - https://id.${DOMAIN}/
+    - https://id.${DOMAIN}/api/reauth
+    - https://oidc.${DOMAIN}/oauth2/auth
+  methods:
+    password:
+      enabled: true
+  default_browser_return_url: https://id.${DOMAIN}/
+  flows:
+    login:
+      ui_url: https://id.${DOMAIN}/login
+    registration:
+      ui_url: https://id.${DOMAIN}/register
+    error:
+      ui_url: https://id.${DOMAIN}/error
+    logout:
+      after:
+        default_browser_return_url: https://id.${DOMAIN}/
 
 courier:
   smtp:
     connection_uri: smtps://foo:bar@none
 
+secrets:
+  cookie:
+    - 'verylongrandomsecretstring1234567890'
+
 log:
   level: debug
+
+oauth2_provider:
+  url: http://hydra:4445

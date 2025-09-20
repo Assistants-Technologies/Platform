@@ -13,17 +13,22 @@ services:
 
   kratos:
     ports:
-      - "4433:4433"
+      - '4433:4433'
 
   hydra:
     ports:
-      - "4444:4444"
-  
+      - '4444:4444'
+
   id-portal:
     build:
       target: development
+    ports:
+      - '3000:3000'
     volumes:
       - ../../IdPortal:/app
       - /app/node_modules
     environment:
       - NODE_ENV=development
+      - NEXT_PUBLIC_KRATOS_PUBLIC_URL=https://idp.assts.site
+      - NEXT_PUBLIC_ID_PUBLIC_URL=https://id.assts.site
+      - HYDRA_ADMIN_URL=http://hydra:4445

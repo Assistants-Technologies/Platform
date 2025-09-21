@@ -2,7 +2,7 @@
 
 ## Prettier + ESLint
 
-You need to go one folder up, as this is Platform. It should be a folder in a "Acstane" folder, just as the rest of the repos.
+Remember, you need to go one folder up, as this is Platform repo, not Acstane workspace.
 
 ### .vscode/settings.json
 
@@ -15,7 +15,7 @@ You need to go one folder up, as this is Platform. It should be a folder in a "A
 
 ### .prettierignore
 
-```json
+```t
 */node_modules
 */dist
 */.next
@@ -23,7 +23,7 @@ You need to go one folder up, as this is Platform. It should be a folder in a "A
 
 ### eslint.config.ts
 
-```
+```ts
 import js from '@eslint/js';
 import typescriptEslint from '@typescript-eslint/eslint-plugin';
 import typescriptParser from '@typescript-eslint/parser';
@@ -98,7 +98,7 @@ export default [
 
 ### package.json
 
-```
+```json
 {
   "name": "Acstane",
   "version": "1.0.0",

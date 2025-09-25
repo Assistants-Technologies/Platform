@@ -7,9 +7,9 @@ serve:
     cors:
       enabled: true
       allowed_origins:
-        - http://localhost:3000
         - https://id.${DOMAIN}
         - https://oidc.${DOMAIN}
+        - https://idp.${DOMAIN}
       allowed_methods:
         - GET
         - POST

@@ -1,17 +1,51 @@
+version: '3.9'
+
 services:
+  traefik:
+    image: traefik:v3.5.2
+    container_name: traefik
+    command:
+      - --api.dashboard=true
+      - --providers.docker=true
+      - --providers.file.filename=/dynamic.yml
+      - --entrypoints.websecure.address=:443
+      - --log.level=DEBUG
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik/dynamic.yml:/dynamic.yml:ro
+      - ./certs:/certs:ro
+    networks:
+      - internal
+    #labels:
+    # - traefik.http.middlewares.oathkeeper.forwardauth.address=http://oathkeeper:4456/decisions
+    # - traefik.http.middlewares.oathkeeper.forwardauth.authResponseHeaders=X-Id-Token,Authorization
+
+  # oathkeeper:
+  #   image: oryd/oathkeeper:v0.40.9
+  #   container_name: oathkeeper
+  #   command:
+  #     - serve
+  #     - --config
+  #     - /etc/config/oathkeeper.yml
+  #   volumes:
+  #     - ./oathkeeper/oathkeeper.yml:/etc/config/oathkeeper.yml
+  #     - ./oathkeeper/rules:/etc/oathkeeper/rules
+  #   networks:
+  #     - internal
+
   kratos:
     image: oryd/kratos:v1.3.1
     container_name: kratos
+    command:
+      - serve
+      - all
+      - --config
+      - /etc/config/kratos.yml
     environment:
       - DSN=postgres://kratos:kratos@db-kratos:5432/kratos?sslmode=disable
-    entrypoint:
-      - sh
-      - -c
-      - |
-        echo "Running Kratos migrations..."
-        kratos migrate sql -e "postgres://kratos:kratos@db-kratos:5432/kratos?sslmode=disable" up --yes
-        echo "Starting Kratos server..."
-        kratos serve all --config /etc/config/kratos.yml
     volumes:
       - ./kratos/kratos.yml:/etc/config/kratos.yml
       - ./kratos/identity.schema.json:/etc/config/identity.schema.json
@@ -19,27 +53,50 @@ services:
       - db-kratos
     networks:
       - internal
+    labels:
+      - traefik.http.routers.kratos.rule=Host(`idp.acstane.test`)
+      - traefik.http.services.kratos.loadbalancer.server.port=4433
+      - traefik.http.services.kratos.loadbalancer.server.scheme=http
+      - traefik.http.routers.kratos.entrypoints=websecure
+      - traefik.http.routers.kratos.tls=true
 
   hydra:
     image: oryd/hydra:v2.3.0
     container_name: hydra
-    entrypoint:
-      - sh
-      - -c
-      - |
-        echo "Running Hydra migrations..."
-        hydra migrate sql -e "postgres://hydra:hydra@db-hydra:5432/hydra?sslmode=disable" up --yes
-        echo "Starting Hydra server..."
-        hydra serve all --config /etc/config/hydra.yml
+    command:
+      - serve
+      - all
+      - --config
+      - /etc/config/hydra.yml
+    environment:
+      - DSN=postgres://hydra:hydra@db-hydra:5432/hydra?sslmode=disable
     volumes:
       - ./hydra/hydra.yml:/etc/config/hydra.yml
-    environment:
-      - ORY_SDK_URL=http://hydra:4445
-      - DSN=postgres://hydra:hydra@db-hydra:5432/hydra?sslmode=disable
     depends_on:
       - db-hydra
     networks:
       - internal
+    labels:
+      - traefik.http.routers.hydra.rule=Host(`oidc.acstane.test`)
+      - traefik.http.services.hydra.loadbalancer.server.port=4444
+      - traefik.http.services.hydra.loadbalancer.server.scheme=http
+      - traefik.http.routers.hydra.entrypoints=websecure
+      - traefik.http.routers.hydra.tls=true
+
+  id-portal:
+    build:
+      context: ../../IdPortal
+      dockerfile: Dockerfile
+      target: production
+    container_name: id-portal
+    networks:
+      - internal
+    labels:
+      - traefik.http.routers.portal.rule=Host(`id.acstane.test`)
+      - traefik.http.services.portal.loadbalancer.server.port=3000
+      - traefik.http.routers.portal.entrypoints=websecure
+      - traefik.http.routers.portal.tls=true
+      #- traefik.http.routers.portal.middlewares=oathkeeper@docker
 
   db-kratos:
     image: postgres:15
@@ -62,15 +119,6 @@ services:
       - POSTGRES_DB=hydra
     volumes:
       - hydra-db-data:/var/lib/postgresql/data
-    networks:
-      - internal
-
-  id-portal:
-    build:
-      context: ../../IdPortal
-      dockerfile: Dockerfile
-      target: production
-    container_name: id-portal
     networks:
       - internal
 

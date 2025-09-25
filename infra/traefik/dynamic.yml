@@ -1,0 +1,4 @@
+tls:
+  certificates:
+    - certFile: /certs/acstane.test/_wildcard.acstane.test.pem
+      keyFile: /certs/acstane.test/_wildcard.acstane.test-key.pem

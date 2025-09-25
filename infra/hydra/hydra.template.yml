@@ -17,6 +17,8 @@ log:
 
 urls:
   self:
+    public: https://oidc.${DOMAIN}/
+    admin: http://hydra:4445
     issuer: https://oidc.${DOMAIN}/
   consent: https://id.${DOMAIN}/consent
   login: https://id.${DOMAIN}/api/authenticate

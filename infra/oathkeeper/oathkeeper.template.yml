@@ -1,0 +1,58 @@
+serve:
+  proxy:
+    port: 4455
+  api:
+    port: 4456
+
+access_rules:
+  repositories:
+    - file:///etc/oathkeeper/rules/rules.json
+
+errors:
+  fallback:
+    - json
+  handlers:
+    json:
+      enabled: true
+      config:
+        verbose: true
+    redirect:
+      enabled: true
+      config:
+        to: https://www.ory.sh/docs
+
+mutators:
+  header:
+    enabled: true
+    config:
+      headers:
+        X-User: '{{ print .Subject }}'
+  noop:
+    enabled: true
+  id_token:
+    enabled: true
+    config:
+      issuer_url: https://oidc.${DOMAIN}/
+      jwks_url: https://oidc.${DOMAIN}/.well-known/jwks.json
+
+authorizers:
+  allow:
+    enabled: true
+  deny:
+    enabled: true
+
+authenticators:
+  cookie_session:
+    enabled: true
+    config:
+      check_session_url: http://kratos:4433/sessions/whoami
+      subject_from: 'identity.id'
+      extra_from: 'identity.traits.email'
+      preserve_path: true
+      preserve_query: false
+  anonymous:
+    enabled: true
+    config:
+      subject: guest
+  noop:
+    enabled: true

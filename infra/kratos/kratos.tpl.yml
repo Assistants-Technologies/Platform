@@ -2,14 +2,14 @@ dsn: ${DSN}
 
 serve:
   public:
-    base_url: https://idp.${DOMAIN}/
+    base_url: https://idp.${ACSTANE_DOMAIN}/
     port: 4433
     cors:
       enabled: true
       allowed_origins:
-        - https://id.${DOMAIN}
-        - https://oidc.${DOMAIN}
-        - https://idp.${DOMAIN}
+        - https://id.${ACSTANE_DOMAIN}
+        - https://oidc.${ACSTANE_DOMAIN}
+        - https://idp.${ACSTANE_DOMAIN}
       allowed_methods:
         - GET
         - POST
@@ -27,7 +27,7 @@ serve:
 
 session:
   cookie:
-    domain: ${DOMAIN}
+    domain: ${ACSTANE_DOMAIN}
     same_site: Lax
 
 identity:
@@ -37,23 +37,23 @@ identity:
 
 selfservice:
   allowed_return_urls:
-    - https://id.${DOMAIN}/
-    - https://id.${DOMAIN}/api/reauth
-    - https://oidc.${DOMAIN}/oauth2/auth
+    - https://id.${ACSTANE_DOMAIN}/
+    - https://id.${ACSTANE_DOMAIN}/api/reauth
+    - https://oidc.${ACSTANE_DOMAIN}/oauth2/auth
   methods:
     password:
       enabled: true
-  default_browser_return_url: https://id.${DOMAIN}/
+  default_browser_return_url: https://id.${ACSTANE_DOMAIN}/
   flows:
     login:
-      ui_url: https://id.${DOMAIN}/login
+      ui_url: https://id.${ACSTANE_DOMAIN}/login
     registration:
-      ui_url: https://id.${DOMAIN}/register
+      ui_url: https://id.${ACSTANE_DOMAIN}/register
     error:
-      ui_url: https://id.${DOMAIN}/error
+      ui_url: https://id.${ACSTANE_DOMAIN}/error
     logout:
       after:
-        default_browser_return_url: https://id.${DOMAIN}/
+        default_browser_return_url: https://id.${ACSTANE_DOMAIN}/
 
 courier:
   smtp:
@@ -61,7 +61,7 @@ courier:
 
 secrets:
   cookie:
-    - 'verylongrandomsecretstring1234567890'
+    - ${KRATOS_SECRET}
 
 log:
   level: debug

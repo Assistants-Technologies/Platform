@@ -3,11 +3,7 @@ services:
     build:
       target: development
     volumes:
-      - ../../IdPortal:/app
+      - ../../IdPortal/app:/app/app
+      - ../../IdPortal/lib:/app/lib
+      - ../../IdPortal/public:/app/public
       - /app/node_modules
-    environment:
-      - NODE_ENV=development
-      - NEXT_PUBLIC_KRATOS_PUBLIC_URL=https://idp.acstane.test
-      - KRATOS_PUBLIC_URL=http://kratos:4433
-      - NEXT_PUBLIC_ID_PUBLIC_URL=https://id.acstane.test
-      - HYDRA_ADMIN_URL=http://hydra:4445

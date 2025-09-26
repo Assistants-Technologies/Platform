@@ -1,22 +1,17 @@
-version: '3.9'
-
 services:
   traefik:
-    image: traefik:v3.5.2
+    build:
+      context: ./traefik
+      dockerfile: Dockerfile
     container_name: traefik
-    command:
-      - --api.dashboard=true
-      - --providers.docker=true
-      - --providers.file.filename=/dynamic.yml
-      - --entrypoints.websecure.address=:443
-      - --log.level=DEBUG
+    env_file:
+      - .env
     ports:
-      - '80:80'
       - '443:443'
+      - '80:80'
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./traefik/dynamic.yml:/dynamic.yml:ro
-      - ./certs:/certs:ro
+      - ./traefik/traefik.yml:/etc/traefik/traefik.yml:ro
     networks:
       - internal
     #labels:
@@ -37,18 +32,14 @@ services:
   #     - internal
 
   kratos:
-    image: oryd/kratos:v1.3.1
+    build:
+      context: ./kratos
+      dockerfile: Dockerfile
+    env_file:
+      - .env
     container_name: kratos
-    command:
-      - serve
-      - all
-      - --config
-      - /etc/config/kratos.yml
     environment:
       - DSN=postgres://kratos:kratos@db-kratos:5432/kratos?sslmode=disable
-    volumes:
-      - ./kratos/kratos.yml:/etc/config/kratos.yml
-      - ./kratos/identity.schema.json:/etc/config/identity.schema.json
     depends_on:
       - db-kratos
     networks:
@@ -61,17 +52,14 @@ services:
       - traefik.http.routers.kratos.tls=true
 
   hydra:
-    image: oryd/hydra:v2.3.0
+    build:
+      context: ./hydra
+      dockerfile: Dockerfile
+    env_file:
+      - .env
     container_name: hydra
-    command:
-      - serve
-      - all
-      - --config
-      - /etc/config/hydra.yml
     environment:
       - DSN=postgres://hydra:hydra@db-hydra:5432/hydra?sslmode=disable
-    volumes:
-      - ./hydra/hydra.yml:/etc/config/hydra.yml
     depends_on:
       - db-hydra
     networks:
@@ -89,6 +77,8 @@ services:
       dockerfile: Dockerfile
       target: production
     container_name: id-portal
+    env_file:
+      - .env
     networks:
       - internal
     labels:

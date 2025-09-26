@@ -1,0 +1,24 @@
+dsn: ${DSN}
+
+serve:
+  public:
+    port: 4444
+  admin:
+    port: 4445
+  cookies:
+    same_site_mode: Lax
+
+secrets:
+  system:
+    - ${HYDRA_SECRET}
+
+log:
+  level: debug
+
+urls:
+  self:
+    public: https://oidc.${ACSTANE_DOMAIN}/
+    admin: http://hydra:4445
+    issuer: https://oidc.${ACSTANE_DOMAIN}/
+  consent: https://id.${ACSTANE_DOMAIN}/consent
+  login: https://id.${ACSTANE_DOMAIN}/api/authenticate

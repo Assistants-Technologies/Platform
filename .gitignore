@@ -3,6 +3,4 @@ infra/hydra/hydra.yml
 infra/cloudflared/*.json
 infra/cloudflared/config.yml
 infra/oathkeeper/rules/rules.yml
-infra/certs/*
-!infra/certs/acstane.test
-!infra/certs/acstane.test/*
+infra/.env

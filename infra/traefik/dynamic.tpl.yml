@@ -1,0 +1,4 @@
+tls:
+  certificates:
+    - certFile: /certs/acstane.pem
+      keyFile: /certs/acstane-key.pem

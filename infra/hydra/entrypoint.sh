@@ -27,7 +27,7 @@ done
 doppler run -- bash -c '
 CLIENT_ID="${HYDRA_ACSTANE_CLIENT_ID}"
 CLIENT_SECRET="${HYDRA_ACSTANE_CLIENT_SECRET}"
-REDIRECT_URI="https://id.${ACSTANE_DOMAIN}/api/authenticate"
+REDIRECT_URI="https://id.${ACSTANE_DOMAIN}/"
 HYDRA_ENDPOINT="http://hydra:4445"
 
 CLIENT_EXISTS=$(hydra get oauth2-client "$CLIENT_ID" --endpoint "$HYDRA_ENDPOINT" --format json 2>/dev/null || echo "{}")

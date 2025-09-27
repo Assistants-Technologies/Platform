@@ -50,8 +50,7 @@ selfservice:
           display_name: Acstane Identity
           id: ${ACSTANE_DOMAIN}
           origins:
-            - https://id.${ACSTANE_DOMAIN}/login
-            - https://id.${ACSTANE_DOMAIN}/register
+            - https://id.${ACSTANE_DOMAIN}
     oidc:
       config:
         providers:

@@ -2,6 +2,9 @@ services:
   kratos:
     environment:
       - LOG_LEAK_SENSITIVE_VALUES=true
+  hydra:
+    environment:
+      - LOG_LEAK_SENSITIVE_VALUES=true
   id-portal:
     build:
       target: development

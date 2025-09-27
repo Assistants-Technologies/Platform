@@ -22,3 +22,4 @@ urls:
     issuer: https://oidc.${ACSTANE_DOMAIN}/
   consent: https://id.${ACSTANE_DOMAIN}/consent
   login: https://id.${ACSTANE_DOMAIN}/api/authenticate
+  error: https://id.${ACSTANE_DOMAIN}/error

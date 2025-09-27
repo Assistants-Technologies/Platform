@@ -9,24 +9,85 @@
         "email": {
           "type": "string",
           "format": "email",
-          "title": "Email"
+          "title": "Email",
+          "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$",
+          "minLength": 5,
+          "maxLength": 254,
+          "ory.sh/kratos": {
+            "credentials": {
+              "password": {
+                "identifier": true
+              },
+              "totp": {
+                "account_name": true
+              },
+              "code": {
+                "identifier": true,
+                "via": "email"
+              },
+              "passkey": {
+                "display_name": true
+              },
+              "webauthn": { "identifier": true }
+            },
+            "recovery": {
+              "via": "email"
+            },
+            "verification": {
+              "via": "email"
+            }
+          }
         },
         "username": {
           "type": "string",
-          "title": "Username"
+          "title": "Username",
+          "pattern": "^[a-zA-Z0-9._-]+$",
+          "minLength": 3,
+          "maxLength": 32,
+          "ory.sh/kratos": {
+            "credentials": {
+              "password": {
+                "identifier": true
+              }
+            }
+          }
+        },
+        "name": {
+          "type": "object",
+          "required": ["first", "last"],
+          "properties": {
+            "first": {
+              "title": "First name",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 50
+            },
+            "middle": {
+              "title": "Middle name",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 50
+            },
+            "last": {
+              "title": "Last name",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 50
+            }
+          }
+        },
+        "newsletter": {
+          "type": "boolean",
+          "title": "Newsletter subscription"
+        },
+        "tos": {
+          "type": "boolean",
+          "title": "Terms of Service acceptance",
+          "const": true
         }
       },
-      "anyOf": [
-        {
-          "required": ["email"]
-        },
-        {
-          "required": ["username"]
-        }
-      ],
+      "required": ["email", "username", "name", "tos"],
       "additionalProperties": false
     }
-  },
-  "additionalProperties": false,
-  "required": ["traits"]
+  }
 }

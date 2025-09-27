@@ -35,12 +35,16 @@ if [ "$(echo "$CLIENT_EXISTS" | jq -r ".client_id // empty")" = "" ]; then
     echo "Client $CLIENT_ID does not exist, creating..."
     hydra create oauth2-client \
         --id "$CLIENT_ID" \
+        --name "Discord Dashboard" \
         --secret "$CLIENT_SECRET" \
         --redirect-uri "$REDIRECT_URI" \
         --grant-type authorization_code \
+        --skip-consent \
+        --skip-logout-consent \
         --grant-type refresh_token \
         --response-type code \
-        --scope openid,offline \
+        --scope openid,offline,profile,email,metrics:discord-dashboard \
+        --audience api://discord-dashboard,api://metrics,api://store,api://store/connect \
         --token-endpoint-auth-method client_secret_post \
         --endpoint "$HYDRA_ENDPOINT" \
         --format json \

@@ -43,12 +43,50 @@ selfservice:
   methods:
     password:
       enabled: true
+    passkey:
+      enabled: true
+      config:
+        rp:
+          display_name: Acstane Identity
+          id: ${ACSTANE_DOMAIN}
+          origins:
+            - https://id.${ACSTANE_DOMAIN}/login
+            - https://id.${ACSTANE_DOMAIN}/register
+    oidc:
+      config:
+        providers:
+          - id: google
+            provider: google
+            client_id: ${HYDRA_GOOGLE_CLIENT_ID}
+            client_secret: ${HYDRA_GOOGLE_CLIENT_SECRET}
+            mapper_url: 'base64://bG9jYWwgY2xhaW1zID0gewogIGVtYWlsOiBzdGQuZXh0VmFyKCdjbGFpbXMnKS5lbWFpbCwKICBlbWFpbF92ZXJpZmllZDogc3RkLmV4dFZhcignY2xhaW1zJykuZW1haWxfdmVyaWZpZWQKfTsKCnsKICBpZGVudGl0eTogewogICAgdHJhaXRzOiB7CiAgICAgIGVtYWlsOiBjbGFpbXMuZW1haWwKICAgIH0sCiAgfSwKfQo='
+            scope:
+              - openid
+              - email
+              - profile
+            requested_claims:
+              id_token:
+                email:
+                  essential: true
+                email_verified:
+                  essential: true
+                given_name:
+                  essential: true
+                family_name:
+                  essential: true
+      enabled: true
+    code:
+      passwordless_enabled: true
   default_browser_return_url: https://id.${ACSTANE_DOMAIN}/
   flows:
     login:
       ui_url: https://id.${ACSTANE_DOMAIN}/login
     registration:
       ui_url: https://id.${ACSTANE_DOMAIN}/register
+      after:
+        oidc:
+          hooks:
+            - hook: session
     error:
       ui_url: https://id.${ACSTANE_DOMAIN}/error
     logout:

@@ -1,9 +1,13 @@
 services:
+  kratos:
+    environment:
+      - LOG_LEAK_SENSITIVE_VALUES=true
   id-portal:
     build:
       target: development
     volumes:
       - ../../IdPortal/app:/app/app
       - ../../IdPortal/lib:/app/lib
+      - ../../IdPortal/components:/app/components
       - ../../IdPortal/public:/app/public
       - /app/node_modules

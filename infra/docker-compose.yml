@@ -44,8 +44,10 @@ services:
       - db-kratos
     networks:
       - internal
+    extra_hosts:
+      - 'idp.acstane.site:host-gateway'
     labels:
-      - traefik.http.routers.kratos.rule=Host(`idp.acstane.test`)
+      - traefik.http.routers.kratos.rule=Host(`idp.acstane.site`)
       - traefik.http.services.kratos.loadbalancer.server.port=4433
       - traefik.http.services.kratos.loadbalancer.server.scheme=http
       - traefik.http.routers.kratos.entrypoints=websecure
@@ -65,7 +67,7 @@ services:
     networks:
       - internal
     labels:
-      - traefik.http.routers.hydra.rule=Host(`oidc.acstane.test`)
+      - traefik.http.routers.hydra.rule=Host(`oidc.acstane.site`)
       - traefik.http.services.hydra.loadbalancer.server.port=4444
       - traefik.http.services.hydra.loadbalancer.server.scheme=http
       - traefik.http.routers.hydra.entrypoints=websecure
@@ -82,7 +84,7 @@ services:
     networks:
       - internal
     labels:
-      - traefik.http.routers.portal.rule=Host(`id.acstane.test`)
+      - traefik.http.routers.portal.rule=Host(`id.acstane.site`)
       - traefik.http.services.portal.loadbalancer.server.port=3000
       - traefik.http.routers.portal.entrypoints=websecure
       - traefik.http.routers.portal.tls=true

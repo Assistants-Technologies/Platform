@@ -75,7 +75,7 @@ selfservice:
                   essential: true
       enabled: true
     code:
-      passwordless_enabled: true
+      enabled: false
   default_browser_return_url: https://id.${ACSTANE_DOMAIN}/
   flows:
     login:
